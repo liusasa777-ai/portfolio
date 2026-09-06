@@ -23,6 +23,28 @@ const observer = new IntersectionObserver(
 
 sections.forEach((section) => observer.observe(section));
 
+const experienceToggles = Array.from(document.querySelectorAll(".experience-toggle"));
+
+const setExperienceExpanded = (toggle, expanded) => {
+  const detail = document.getElementById(toggle.getAttribute("aria-controls"));
+  const card = toggle.closest(".experience-card");
+
+  toggle.setAttribute("aria-expanded", String(expanded));
+  toggle.querySelector("span").textContent = expanded ? "收起详情" : "查看详情";
+  card.classList.toggle("is-expanded", expanded);
+  detail.setAttribute("aria-hidden", String(!expanded));
+};
+
+experienceToggles.forEach((toggle) => {
+  toggle.addEventListener("click", () => {
+    const shouldExpand = toggle.getAttribute("aria-expanded") !== "true";
+
+    experienceToggles.forEach((otherToggle) => {
+      setExperienceExpanded(otherToggle, otherToggle === toggle && shouldExpand);
+    });
+  });
+});
+
 document.querySelectorAll(".polaroid").forEach((polaroid) => {
   polaroid.addEventListener("click", () => {
     const revealed = polaroid.classList.toggle("revealed");
